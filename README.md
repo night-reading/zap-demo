@@ -7,7 +7,7 @@
     info debug 级别的日志输出到 /path/log/demo.log
     warn error .... 级别的日志输出到 /path/log/demo_error.log
 
-    日志自动按小时分割 最多保留7天的日志
+   日志自动按小时分割 最多保留7天的日志
     
     
 ## 依赖的第三方包github地址
