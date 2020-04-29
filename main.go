@@ -20,13 +20,13 @@ const (
 func main() {
 	logger := SetupLogger(logDir, accessLog, errorLog)
 
-	pid := PidSetup{
+	pid := Pid{
 		PidFile: pidFile,
 	}
 
+	logger.Info("Info", zap.String("11", "23"))
 	pid.CreatePidFile(logger)
 
-	logger.Info("Info", zap.String("11", "23"))
 
 	time.Sleep(time.Second * 2)
 	pid.RemovePidFile()
@@ -82,27 +82,26 @@ func getWriter(filename string) io.Writer {
 		rotatelogs.WithMaxAge(time.Hour*24*7),
 		rotatelogs.WithRotationTime(time.Hour),
 	)
-
 	if err != nil {
 		panic(err)
 	}
 	return hook
 }
 
-type PidSetup struct {
+type Pid struct {
 	PidFile string
 }
 
-func (pid *PidSetup) CreatePidFile(logger *zap.Logger) {
+func (pid *Pid) CreatePidFile(logger *zap.Logger) {
 	f, err := os.OpenFile(pid.PidFile, os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		panic("failed to create pid file")
 	}
 	io.WriteString(f, fmt.Sprintf("%d", os.Getpid()))
 	f.Close()
-	logger.Info("Server ", zap.Int("pid", os.Getpid()))
+	logger.Info("Server", zap.Int("pid", os.Getpid()))
 }
 
-func (pid *PidSetup) RemovePidFile() {
+func (pid *Pid) RemovePidFile() {
 	os.Remove(pid.PidFile)
 }
